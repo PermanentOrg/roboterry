@@ -5,7 +5,8 @@
 		"lint": "npm run lint:prettier",
 		"lint:prettier": "prettier . --check",
 		"format": "npm run format:prettier",
-		"format:prettier": "prettier --write ."
+		"format:prettier": "prettier --write .",
+		"local-developer": "bash scripts/setup-local-dev.sh"
 	},
 	"dependencies": {
 		"@bytebase/dbhub": "^0.19.1"
