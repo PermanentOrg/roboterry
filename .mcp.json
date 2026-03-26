@@ -1,0 +1,8 @@
+{
+	"mcpServers": {
+		"db": {
+			"command": "bash",
+			"args": ["scripts/start-db.sh"]
+		}
+	}
+}
