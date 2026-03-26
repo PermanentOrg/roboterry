@@ -1,0 +1,13 @@
+{
+	"name": "staffbot",
+	"private": true,
+	"scripts": {
+		"lint": "npm run lint:prettier",
+		"lint:prettier": "prettier . --check",
+		"format": "npm run format:prettier",
+		"format:prettier": "prettier --write ."
+	},
+	"devDependencies": {
+		"prettier": "^3.8.1"
+	}
+}
