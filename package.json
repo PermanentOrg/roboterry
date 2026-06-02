@@ -9,6 +9,6 @@
 		"local-developer": "bash scripts/setup-local-dev.sh"
 	},
 	"devDependencies": {
-		"prettier": "^3.8.1"
+		"prettier": "^3.8.3"
 	}
 }
