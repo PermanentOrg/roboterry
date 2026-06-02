@@ -12,32 +12,6 @@ else
   echo "✓ Created .local-developer flag file."
 fi
 
-# --- Claude Code local developer permissions ---
-LOCAL_SETTINGS="$REPO_ROOT/.claude/settings.local.json"
-if [ -f "$LOCAL_SETTINGS" ]; then
-  echo "✓ .claude/settings.local.json already exists, skipping."
-else
-  mkdir -p "$REPO_ROOT/.claude"
-  cat > "$LOCAL_SETTINGS" << 'SETTINGS'
-{
-  "permissions": {
-    "allow": [
-      "Read",
-      "Glob",
-      "Grep",
-      "Bash",
-      "Write",
-      "Edit",
-      "Agent",
-      "mcp__db"
-    ],
-    "deny": []
-  }
-}
-SETTINGS
-  echo "✓ Created .claude/settings.local.json with developer permissions."
-fi
-
 # --- Environment file ---
 ENV_FILE="$REPO_ROOT/.env"
 if [ -f "$ENV_FILE" ]; then
