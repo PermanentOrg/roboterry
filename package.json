@@ -1,0 +1,14 @@
+{
+	"name": "roboterry",
+	"private": true,
+	"scripts": {
+		"lint": "npm run lint:prettier",
+		"lint:prettier": "prettier . --check",
+		"format": "npm run format:prettier",
+		"format:prettier": "prettier --write .",
+		"local-developer": "bash scripts/setup-local-dev.sh"
+	},
+	"devDependencies": {
+		"prettier": "^3.8.1"
+	}
+}
