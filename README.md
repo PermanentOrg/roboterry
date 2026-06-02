@@ -2,11 +2,9 @@
 
 A conversational interface for querying our production data using Claude Code. Designed for non-technical staff — no SQL or programming knowledge required.
 
-> **Note:** The database connection (a postgres MCP server) is being set up separately and is not part of this branch yet. Until it lands, sessions run but cannot query data.
-
 ## How It Works
 
-You open Claude Code (locally or on the web), ask a question in plain English, and get an answer pulled from the data. For example:
+You open Claude Code, ask a question in plain English, and get an answer pulled from the data. For example:
 
 - "How many users signed up last month?"
 - "Show me the top 10 customers by revenue"
@@ -16,26 +14,25 @@ Claude translates your question into a database query, runs it, and presents the
 
 ## Setup
 
-There are two ways to use Roboterry: **locally** (Claude Code CLI or desktop app) or **on the web** (claude.ai/code).
-
-### Local Setup
-
 1. Install [Claude Code](https://claude.ai/download)
 2. Clone this repository:
    ```
    git clone <repository-url>
    cd roboterry
    ```
-3. Start Claude Code from inside the roboterry directory:
+3. Run
+   ```
+   cp .env.template .env
+   ```
+4. Set `DATABASE_PASSWORD` and `DATABASE_HOST` in your .env. This can be found in Bitwarden under "PostgreSQL prod read-only user"; the password unser "Password" and the host under "Website"
+5. Run
+   ```
+   npm install
+   ```
+6. Start Claude Code from inside the roboterry directory:
    ```
    claude
    ```
-
-### Web Setup
-
-1. Go to [claude.ai/code](https://claude.ai/code)
-2. Connect this repository as your project
-3. Start a new session
 
 ## Usage Tips
 
