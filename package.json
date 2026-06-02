@@ -1,5 +1,5 @@
 {
-	"name": "staffbot",
+	"name": "roboterry",
 	"private": true,
 	"scripts": {
 		"lint": "npm run lint:prettier",
@@ -7,9 +7,6 @@
 		"format": "npm run format:prettier",
 		"format:prettier": "prettier --write .",
 		"local-developer": "bash scripts/setup-local-dev.sh"
-	},
-	"dependencies": {
-		"@bytebase/dbhub": "^0.19.1"
 	},
 	"devDependencies": {
 		"prettier": "^3.8.1"

@@ -1,16 +1,15 @@
 {
 	"permissions": {
-		"allow": ["Read", "Glob", "Grep", "mcp__db"],
+		"allow": ["Read", "Glob", "Grep", "Write", "Edit", "Bash", "Agent"],
 		"deny": []
 	},
 	"hooks": {
-		"PreToolUse": [
+		"SessionStart": [
 			{
-				"matcher": "Write|Edit|Bash|NotebookEdit|Agent",
 				"hooks": [
 					{
 						"type": "command",
-						"command": "\"$CLAUDE_PROJECT_DIR\"/scripts/check-developer-mode.sh"
+						"command": "\"$CLAUDE_PROJECT_DIR\"/scripts/developer-mode-status.sh"
 					}
 				]
 			}

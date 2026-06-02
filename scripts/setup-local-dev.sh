@@ -12,14 +12,6 @@ else
   echo "✓ Created .local-developer flag file."
 fi
 
-# --- Environment file ---
-ENV_FILE="$REPO_ROOT/.env"
-if [ -f "$ENV_FILE" ]; then
-  echo "✓ .env already exists, skipping."
-else
-  cp "$REPO_ROOT/.env.template" "$ENV_FILE"
-  echo "✓ Created .env from template. Fill in the values before starting Claude Code."
-fi
-
 echo ""
-echo "Local developer setup complete."
+echo "Roboterry developer mode enabled. Restart your session so the"
+echo "SessionStart hook picks up the .local-developer flag."
