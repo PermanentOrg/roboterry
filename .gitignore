@@ -75,6 +75,12 @@ web_modules/
 .local-developer
 .claude/settings.local.json
 
+# Staff sandbox — Roboterry's scratch workspace for staff-generated reports,
+# exports, scripts, and CSVs. Contents must never be committed to git.
+# Only the explanatory README is tracked so the directory always exists.
+/sandbox/*
+!/sandbox/README.md
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
