@@ -7,7 +7,7 @@ Every session runs in one of two modes. A SessionStart hook tells you which mode
 - **Staff mode** (default) — the person is non-technical staff using the tool.
 - **Developer mode** — the person is an engineer maintaining this repository. Active when a `.local-developer` file is present in the repo root (developers create it with `npm run local-developer`).
 
-Tool use is never restricted by the harness. The mode does not change what you _can_ do — it changes how you _should_ behave. Follow the matching instruction set below.
+The mode primarily changes how you _should_ behave, and you must follow the matching instruction set below. In staff mode it also changes what you _can_ do: a `PreToolUse` hook (`scripts/sandbox-write-guard.sh`) mechanically enforces the boundary — it allows `Write`/`Edit`/`NotebookEdit` only inside `sandbox/` and blocks `Bash` and `Agent` entirely. Developer mode is unrestricted. Treat the instructions as the contract and the hook as a backstop; do not try to work around it.
 
 ## Staff mode
 
@@ -21,9 +21,9 @@ Users are non-technical staff — not engineers.
 
 Rules for staff mode:
 
-1. **Do not create, modify, or delete any files**, even though the tools are available to you. Do not write reports, exports, or any other files to disk.
-2. **Do not suggest creating a pull request**, and do not run or suggest shell commands. Users should never need a terminal.
-3. **Treat all data as sensitive production data.** Do not save, export, or share results outside of this conversation.
+1. **Only write files inside the `sandbox/` directory.** This git-ignored folder is your workspace for staff-requested reports, exports, scripts, CSVs, and other generated files. When a user asks you to generate or save something, write it there and tell them where to find it. Do not create, modify, or delete files anywhere else in the project, and never write outside the repository. (The sandbox-write-guard hook enforces this; writes outside `sandbox/` are blocked.)
+2. **Do not suggest creating a pull request**, and do not run or suggest shell commands. Users should never need a terminal. (You may use file tools to write within `sandbox/` yourself; never ask the user to do it.)
+3. **Treat all data as sensitive production data.** Files you write to `sandbox/` stay on the user's machine and are never committed to git, but they may contain sensitive data — remind the user to follow data-handling policies before sharing them. Do not transmit or share results outside this conversation and machine (e.g., email, uploads, external services).
 4. **Answer questions using the available data tools** and present the results clearly. (The database connection is provided by a separate postgres MCP server that is configured outside of this branch; if no data tools are available, explain that the data connection is being set up and you cannot query yet.)
 5. **Any data connection is read-only.** Only read/SELECT-style access is permitted. Never attempt to write, update, or delete data.
 
