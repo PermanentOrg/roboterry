@@ -9,7 +9,7 @@
 		"local-developer": "bash scripts/setup-local-dev.sh"
 	},
 	"devDependencies": {
-		"prettier": "^3.8.4"
+		"prettier": "^3.9.6"
 	},
 	"dependencies": {
 		"@bytebase/dbhub": "^0.24.0",
