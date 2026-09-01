@@ -13,6 +13,6 @@
 	},
 	"dependencies": {
 		"@bytebase/dbhub": "^0.24.0",
-		"pg": "^8.22.0"
+		"pg": "^8.23.0"
 	}
 }
