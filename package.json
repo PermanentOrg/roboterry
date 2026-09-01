@@ -12,7 +12,7 @@
 		"prettier": "^3.9.6"
 	},
 	"dependencies": {
-		"@bytebase/dbhub": "^0.24.0",
+		"@bytebase/dbhub": "^1.2.1",
 		"pg": "^8.23.0"
 	}
 }
