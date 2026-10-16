@@ -5,7 +5,7 @@
 			"command": "bash",
 			"args": [
 				"-c",
-				"source ./.env && npx dbhub --dsn postgres://prodreadonly:$DATABASE_PASSWORD@$DATABASE_HOST:5432/permanent"
+				"source ./.env && npx dbhub --dsn postgres://prodreadonly:$DATABASE_PASSWORD@$DATABASE_HOST:5432/permanent?sslmode=require"
 			]
 		}
 	}
