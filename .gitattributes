@@ -1,0 +1,4 @@
+# Check out text files with LF line endings on every platform, including
+# Windows with core.autocrlf=true. Prettier expects LF, and the bash hook
+# scripts in scripts/ must not contain CRLF.
+* text=auto eol=lf
