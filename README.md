@@ -77,18 +77,30 @@ Claude translates your question into a database query, runs it, and presents the
 - **Results stay in the conversation by default.** Nothing is shared anywhere outside it.
 - **Ask for a saved copy when you need one.** If you want a report, spreadsheet, or other file, just ask. Roboterry saves it to the `sandbox/` folder in the project — a private workspace on your computer that is never committed or shared. See `sandbox/README.md` for details.
 
+## Staying Up to Date
+
+When you start Claude Code on the `main` branch, Roboterry checks GitHub for updates. If any are available, you'll see a notice. Type `/update-roboterry` to install them, or just start chatting and Terry will ask whether you want to. Once the update finishes, start a new session so the new tools and instructions load — in the desktop app, start a new session; in a terminal, type `/exit` and run `claude` again.
+
+You can type `/update-roboterry` in Claude at any time, or update from a terminal:
+
+```
+npm run update-roboterry
+```
+
+The check is skipped in developer mode, on other branches, or when you have local changes.
+
 ## Security Notes
 
 - The data connection is **read-only**. No data can be modified through this tool.
 - Results may contain **sensitive production data**. Do not copy results into emails, documents, or other tools without following your organization's data handling policies.
 - Conversations are **ephemeral** — results are not persisted after the conversation ends unless you ask Roboterry to save them.
-- The only place files are written is the git-ignored `sandbox/` directory. Its contents stay on your machine and can never be committed to git or pushed to GitHub. This is enforced mechanically by a `PreToolUse` hook (`scripts/sandbox-write-guard.sh`), not just by instructions — in staff mode, writes outside `sandbox/` and all shell commands are blocked.
+- The only place Roboterry writes the files you ask for is the git-ignored `sandbox/` directory. (Installing an update is the one exception: it changes the Roboterry code and its dependencies, and only when you agree to it.) Its contents stay on your machine and can never be committed to git or pushed to GitHub. This is enforced mechanically by a `PreToolUse` hook (`scripts/sandbox-write-guard.sh`), not just by instructions — in staff mode, Claude's own writes outside `sandbox/` and all shell commands other than the updater, `npm run update-roboterry`, are blocked.
 
 ## Developer Mode
 
 A SessionStart hook detects whether you are a developer and switches which instructions Claude follows (see `CLAUDE.md`). In staff mode a `PreToolUse` hook also enforces the boundary mechanically; developer mode is unrestricted:
 
-- **Staff mode** (default) — Claude behaves as a read-only, conversational data assistant. Writes are confined to `sandbox/`, and shell commands and subagents are blocked.
+- **Staff mode** (default) — Claude behaves as a read-only, conversational data assistant. Writes are confined to `sandbox/`, and subagents and shell commands (other than `npm run update-roboterry`) are blocked.
 - **Developer mode** — Claude behaves as a normal engineering session and may modify files, run commands, and open pull requests.
 
 To enable developer mode, run:

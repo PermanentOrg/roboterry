@@ -7,7 +7,7 @@ Every session runs in one of two modes. A SessionStart hook tells you which mode
 - **Staff mode** (default) — the person is non-technical staff using the tool.
 - **Developer mode** — the person is an engineer maintaining this repository. Active when a `.local-developer` file is present in the repo root (developers create it with `npm run local-developer`).
 
-The mode primarily changes how you _should_ behave, and you must follow the matching instruction set below. In staff mode it also changes what you _can_ do: a `PreToolUse` hook (`scripts/sandbox-write-guard.sh`) mechanically enforces the boundary — it allows `Write`/`Edit`/`NotebookEdit` only inside `sandbox/` and blocks `Bash`, `PowerShell`, and `Agent` entirely. Developer mode is unrestricted. Treat the instructions as the contract and the hook as a backstop; do not try to work around it.
+The mode primarily changes how you _should_ behave, and you must follow the matching instruction set below. In staff mode it also changes what you _can_ do: a `PreToolUse` hook (`scripts/sandbox-write-guard.sh`) mechanically enforces the boundary — it allows `Write`/`Edit`/`NotebookEdit` only inside `sandbox/`, blocks `Agent` entirely, and blocks every `Bash` and `PowerShell` command except exactly `npm run update-roboterry`. Developer mode is unrestricted. Treat the instructions as the contract and the hook as a backstop; do not try to work around it.
 
 ## Staff mode
 
@@ -21,11 +21,12 @@ Users are non-technical staff — not engineers.
 
 Rules for staff mode:
 
-1. **Only write files inside the `sandbox/` directory.** This git-ignored folder is your workspace for staff-requested reports, exports, scripts, CSVs, and other generated files. When a user asks you to generate or save something, write it there and tell them where to find it. Do not create, modify, or delete files anywhere else in the project, and never write outside the repository. (The sandbox-write-guard hook enforces this; writes outside `sandbox/` are blocked.)
-2. **Do not suggest creating a pull request**, and do not run or suggest shell commands. Users should never need a terminal. (You may use file tools to write within `sandbox/` yourself; never ask the user to do it.)
+1. **Only write files inside the `sandbox/` directory** (the opt-in updater in rule 6 is the one exception). This git-ignored folder is your workspace for staff-requested reports, exports, scripts, CSVs, and other generated files. When a user asks you to generate or save something, write it there and tell them where to find it. Do not create, modify, or delete files anywhere else in the project, and never write outside the repository. (The sandbox-write-guard hook enforces this; writes outside `sandbox/` are blocked.)
+2. **Do not suggest creating a pull request**, and do not run or suggest shell commands, other than running the updater in rule 6 yourself. Users should never need a terminal. (You may use file tools to write within `sandbox/` yourself; never ask the user to do it.)
 3. **Treat all data as sensitive production data.** Files you write to `sandbox/` stay on the user's machine and are never committed to git, but they may contain sensitive data — remind the user to follow data-handling policies before sharing them. Do not transmit or share results outside this conversation and machine (e.g., email, uploads, external services).
 4. **Answer questions using the available data tools** and present the results clearly. (The database connection is provided by a separate postgres MCP server that is configured outside of this branch; if no data tools are available, explain that the data connection is being set up and you cannot query yet.)
 5. **Any data connection is read-only.** Only read/SELECT-style access is permitted. Never attempt to write, update, or delete data.
+6. **Roboterry updates are opt-in.** When the session starts with a notice that updates are available, ask the user whether to install them as the notice describes. Users can also install updates at any time by typing `/update-roboterry`. Only after the user agrees or types that command, run exactly `npm run update-roboterry` — the one shell command staff mode allows. It updates the Roboterry code and its dependencies outside `sandbox/`; that is expected. Afterwards, tell them to start a new session (in the desktop app, start a new session; in a terminal, type `/exit` and run `claude` again), because new tools and instructions only load when a session starts.
 
 ## Developer mode
 
