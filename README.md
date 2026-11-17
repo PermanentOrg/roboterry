@@ -14,6 +14,8 @@ Claude translates your question into a database query, runs it, and presents the
 
 ## Setup
 
+### Linux or Mac
+
 1. Install [Claude Code](https://claude.ai/download)
 2. Clone this repository:
    ```
@@ -24,7 +26,7 @@ Claude translates your question into a database query, runs it, and presents the
    ```
    cp .env.template .env
    ```
-4. Set `DATABASE_PASSWORD` and `DATABASE_HOST` in your .env. This can be found in Bitwarden under "PostgreSQL prod read-only user"; the password unser "Password" and the host under "Website"
+4. Set `DATABASE_PASSWORD` and `DATABASE_HOST` in your .env. This can be found in Bitwarden under "PostgreSQL prod read-only user"; the password under "Password" and the host under "Website"
 5. Run
    ```
    npm install
@@ -33,6 +35,39 @@ Claude translates your question into a database query, runs it, and presents the
    ```
    claude
    ```
+
+### Windows
+
+1. Open the Command Prompt tool
+2. Run
+   ```powershell
+   winget install Git.Git
+   ```
+   Accept the terms & conditions when prompted
+3. Run the following commands
+   ```powershell
+   cd ~
+   mkdir permanent
+   cd permanent
+   git clone https://github.com/PermanentOrg/roboterry.git
+   cd roboterry
+   ```
+4. Create the .env file with
+   ```powershell
+   copy .env.template .env
+   ```
+5. Then open the .env file with
+   ```powershell
+   edit .env
+   ```
+6. Set `DATABASE_PASSWORD` and `DATABASE_HOST` in your .env. These can be found in Bitwarden under "PostgreSQL prod read-only user"; the password under "Password" and the host under "Website"
+7. Save and close the .env file with CTRL+S, then CTRL+Q
+8. Download the [Node Windows Installer](https://nodejs.org/en/download) and run it. Click Next on each page of the install wizard.
+9. Back in your Command Prompt, run
+   ```powershell
+   npm install
+   ```
+10. Open a Claude Code session in Claude Desktop and ask it to tell you something about the database
 
 ## Usage Tips
 
@@ -66,7 +101,8 @@ This creates a `.local-developer` flag file (git-ignored). Restart your session 
 
 ## Troubleshooting
 
-| Problem                              | What to do                                                                                |
-| ------------------------------------ | ----------------------------------------------------------------------------------------- |
-| Claude says it can't access the data | The data connection is configured separately and may not be available on this branch yet. |
-| Unexpected or empty results          | Try rephrasing your question with more specific details (dates, names, etc.).             |
+| Problem                                                                 | What to do                                                                    |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Claude says it can't access the data                                    | Ask an engineer                                                               |
+| Unexpected or empty results                                             | Try rephrasing your question with more specific details (dates, names, etc.). |
+| `npm install` fails on Windows with an error mentioning ExecutionPolicy | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`    |

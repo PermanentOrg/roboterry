@@ -8,12 +8,20 @@ set -euo pipefail
 # Developer mode (the .local-developer flag exists) is unrestricted.
 # In staff mode this hook:
 #   - allows Write/Edit/NotebookEdit only inside the sandbox/ directory
-#   - denies Bash (staff sessions never run shell commands)
+#   - denies Bash and PowerShell (staff sessions never run shell commands;
+#     Claude Code offers a PowerShell tool on Windows)
 #   - denies Agent (subagents could write outside the guarded path)
 #
 # A denied tool call exits 2; Claude Code feeds the stderr message back
-# to the model as the denial reason. This is a backstop for the CLAUDE.md
-# instructions, not a replacement for them.
+# to the model as the denial reason. Any other non-zero exit is treated
+# by Claude Code as a non-blocking error and the tool call proceeds, so
+# every failure path here must go through deny() to fail closed.
+#
+# The payload is parsed with node: node is already required,
+# and we want to minimize the number of dependencies users must install.
+#
+# This is a backstop for the CLAUDE.md instructions, not a replacement
+# for them.
 # ------------------------------------------------------------------
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -28,18 +36,33 @@ deny() {
   exit 2
 }
 
-PAYLOAD="$(cat)"
-TOOL="$(printf '%s' "$PAYLOAD" | jq -r '.tool_name // empty')"
+PAYLOAD="$(cat)" || deny "Staff mode: could not read the tool call, so it was blocked."
+
+# Prints a field of the hook payload: "tool" for the tool name, "path" for
+# the write target. Exits non-zero on malformed JSON.
+field() {
+  PAYLOAD="$PAYLOAD" node -e '
+    const payload = JSON.parse(process.env.PAYLOAD);
+    const input = payload.tool_input || {};
+    const value =
+      process.argv[1] === "tool"
+        ? payload.tool_name
+        : (input.file_path ?? input.notebook_path);
+    process.stdout.write(typeof value === "string" ? value : "");
+  ' "$1" 2>/dev/null
+}
+
+TOOL="$(field tool)" || deny "Staff mode: could not read the tool call, so it was blocked."
 
 case "$TOOL" in
-  Bash)
+  Bash | PowerShell)
     deny "Staff mode: shell commands are disabled. Ask Terry to do this another way, or have a developer run it."
     ;;
   Agent)
     deny "Staff mode: subagents are disabled because they can write outside the sandbox/ workspace."
     ;;
   Write | Edit | NotebookEdit)
-    TARGET="$(printf '%s' "$PAYLOAD" | jq -r '.tool_input.file_path // .tool_input.notebook_path // empty')"
+    TARGET="$(field path)" || deny "Staff mode: could not determine the target path, so the write was blocked."
     [ -n "$TARGET" ] || deny "Staff mode: could not determine the target path, so the write was blocked."
 
     INSIDE="$(REPO_ROOT="$REPO_ROOT" TARGET="$TARGET" node -e '
@@ -57,7 +80,7 @@ case "$TOOL" in
       const rel = path.relative(sandbox, resolved);
       const inside = rel !== "" && !rel.startsWith("..") && !path.isAbsolute(rel);
       process.stdout.write(inside ? "yes" : "no");
-    ')"
+    ')" || deny "Staff mode: could not check the target path, so the write was blocked."
 
     [ "$INSIDE" = "yes" ] || deny "Staff mode: files can only be written inside the sandbox/ directory. Blocked path: $TARGET"
     ;;

@@ -7,7 +7,7 @@ Every session runs in one of two modes. A SessionStart hook tells you which mode
 - **Staff mode** (default) — the person is non-technical staff using the tool.
 - **Developer mode** — the person is an engineer maintaining this repository. Active when a `.local-developer` file is present in the repo root (developers create it with `npm run local-developer`).
 
-The mode primarily changes how you _should_ behave, and you must follow the matching instruction set below. In staff mode it also changes what you _can_ do: a `PreToolUse` hook (`scripts/sandbox-write-guard.sh`) mechanically enforces the boundary — it allows `Write`/`Edit`/`NotebookEdit` only inside `sandbox/` and blocks `Bash` and `Agent` entirely. Developer mode is unrestricted. Treat the instructions as the contract and the hook as a backstop; do not try to work around it.
+The mode primarily changes how you _should_ behave, and you must follow the matching instruction set below. In staff mode it also changes what you _can_ do: a `PreToolUse` hook (`scripts/sandbox-write-guard.sh`) mechanically enforces the boundary — it allows `Write`/`Edit`/`NotebookEdit` only inside `sandbox/` and blocks `Bash`, `PowerShell`, and `Agent` entirely. Developer mode is unrestricted. Treat the instructions as the contract and the hook as a backstop; do not try to work around it.
 
 ## Staff mode
 
