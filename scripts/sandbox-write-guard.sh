@@ -8,8 +8,9 @@ set -euo pipefail
 # Developer mode (the .local-developer flag exists) is unrestricted.
 # In staff mode this hook:
 #   - allows Write/Edit/NotebookEdit only inside the sandbox/ directory
-#   - denies Bash and PowerShell (staff sessions never run shell commands;
-#     Claude Code offers a PowerShell tool on Windows)
+#   - denies Bash and PowerShell (Claude Code offers a PowerShell tool on
+#     Windows), except the exact command "npm run update-roboterry" so staff
+#     can opt in to installing Roboterry updates
 #   - denies Agent (subagents could write outside the guarded path)
 #
 # A denied tool call exits 2; Claude Code feeds the stderr message back
@@ -25,6 +26,7 @@ set -euo pipefail
 # ------------------------------------------------------------------
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+UPDATE_COMMAND="npm run update-roboterry"
 
 # Developer mode: no restrictions.
 if [ -f "$REPO_ROOT/.local-developer" ]; then
@@ -38,16 +40,19 @@ deny() {
 
 PAYLOAD="$(cat)" || deny "Staff mode: could not read the tool call, so it was blocked."
 
-# Prints a field of the hook payload: "tool" for the tool name, "path" for
-# the write target. Exits non-zero on malformed JSON.
+# Prints a field of the hook payload: "tool" for the tool name, "command" for
+# the shell command, "path" for the write target. Exits non-zero on malformed
+# JSON.
 field() {
   PAYLOAD="$PAYLOAD" node -e '
     const payload = JSON.parse(process.env.PAYLOAD);
     const input = payload.tool_input || {};
-    const value =
-      process.argv[1] === "tool"
-        ? payload.tool_name
-        : (input.file_path ?? input.notebook_path);
+    const fields = {
+      tool: payload.tool_name,
+      command: input.command,
+      path: input.file_path ?? input.notebook_path,
+    };
+    const value = fields[process.argv[1]];
     process.stdout.write(typeof value === "string" ? value : "");
   ' "$1" 2>/dev/null
 }
@@ -56,6 +61,8 @@ TOOL="$(field tool)" || deny "Staff mode: could not read the tool call, so it wa
 
 case "$TOOL" in
   Bash | PowerShell)
+    COMMAND="$(field command)" || deny "Staff mode: could not read the tool call, so it was blocked."
+    [ "$COMMAND" = "$UPDATE_COMMAND" ] && exit 0
     deny "Staff mode: shell commands are disabled. Ask Terry to do this another way, or have a developer run it."
     ;;
   Agent)

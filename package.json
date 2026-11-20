@@ -6,7 +6,8 @@
 		"lint:prettier": "prettier . --check",
 		"format": "npm run format:prettier",
 		"format:prettier": "prettier --write .",
-		"local-developer": "bash scripts/setup-local-dev.sh"
+		"local-developer": "bash scripts/setup-local-dev.sh",
+		"update-roboterry": "node scripts/update.mjs"
 	},
 	"devDependencies": {
 		"prettier": "^3.9.10"
