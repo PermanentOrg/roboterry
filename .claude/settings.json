@@ -12,6 +12,17 @@
 						"command": "\"$CLAUDE_PROJECT_DIR\"/scripts/developer-mode-status.sh"
 					}
 				]
+			},
+			{
+				"matcher": "startup|resume",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "node",
+						"args": ["${CLAUDE_PROJECT_DIR}/scripts/update-check.mjs"],
+						"timeout": 15
+					}
+				]
 			}
 		],
 		"PreToolUse": [
